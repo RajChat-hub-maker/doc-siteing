@@ -1,8 +1,6 @@
 {
-  "name": "salesautomate-docs-sqlite",
-  "version": "1.0.0",
   "type": "module",
   "dependencies": {
     "better-sqlite3": "^8.0.1"
   }
-}    
+}   
