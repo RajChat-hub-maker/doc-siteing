@@ -3,7 +3,7 @@
   "builds": [
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "styles.css", "use": "@vercel/static" },
-    { "src": "main.js", "use": "@vercel/static" },
+    { "src": "editor.js", "use": "@vercel/static" },
     { "src": "api/*.js", "use": "@vercel/node" }
   ],
   "routes": [
@@ -15,4 +15,4 @@
       "runtime": "nodejs18.x"
     }
   }
-}             
+}            
