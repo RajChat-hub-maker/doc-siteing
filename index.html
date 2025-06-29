@@ -1,10 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SalesAutoMate™ Docs</title>
+
+  <!-- ✅ SEO Meta Tags -->
+  <meta name="description" content="SalesAutoMate™ Online Document Editor" />
+  <meta name="author" content="Rajdeep Chatterjee" />
+  <meta name="keywords" content="SalesAutoMate, Document Editor, Online Docs, Rajdeep Chatterjee, Text Editor, PDF Export" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- ✅ Stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -14,12 +21,16 @@
     <button onclick="loadDoc()">📂 Load</button>
     <button onclick="downloadPDF()">⬇️ Export PDF</button>
   </header>
+
   <main>
     <textarea id="editor" placeholder="Start writing your document..."></textarea>
   </main>
+
   <footer>
     &copy; 2025 SalesAutoMate™ | docs.salesautomate.site
   </footer>
-  <script src="editor.js"></script>
+
+  <!-- ✅ Defer JS to avoid blocking render -->
+  <script src="editor.js" defer></script>
 </body>
-</html>
+</html>       
