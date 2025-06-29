@@ -1,4 +1,7 @@
 // server.js
+app.get('/', (req, res) => {
+  res.send('📡 SalesAutoMate Backend is Running');
+});  
 
 require('dotenv').config(); // Load environment variables from .env
 
