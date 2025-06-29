@@ -1,52 +1,38 @@
 // api/docs.js
+import Database from 'better-sqlite3';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-import { MongoClient } from 'mongodb';
+// Required for __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const uri = process.env.MONGO_URI;
-let cachedClient = null;
+// Use Vercel writable temp directory or fallback to local
+const dbPath = path.join(__dirname, 'docs.sqlite');
+const db = new Database(dbPath);
 
-async function connectToDB() {
-  if (cachedClient) return cachedClient;
+// Initialize table if not exists
+db.prepare(`CREATE TABLE IF NOT EXISTS docs (id INTEGER PRIMARY KEY, content TEXT)`).run();
 
-  const client = new MongoClient(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-
-  await client.connect();
-  cachedClient = client;
-  return client;
-}
-
-export default async function handler(req, res) {
+export default function handler(req, res) {
   try {
-    const client = await connectToDB();
-    const db = client.db('salesautomate-docs'); // you can change DB name if needed
-    const collection = db.collection('documents');
-
     if (req.method === 'GET') {
-      const doc = await collection.findOne({});
-      return res.status(200).json(doc || { content: '' });
-    }
-
-    if (req.method === 'POST') {
+      const row = db.prepare('SELECT content FROM docs WHERE id = 1').get();
+      res.status(200).json({ content: row?.content || '' });
+    } else if (req.method === 'POST') {
       const { content } = req.body;
-      const existing = await collection.findOne({});
-
-      if (existing) {
-        await collection.updateOne({}, { $set: { content } });
+      const exists = db.prepare('SELECT id FROM docs WHERE id = 1').get();
+      if (exists) {
+        db.prepare('UPDATE docs SET content = ? WHERE id = 1').run(content);
       } else {
-        await collection.insertOne({ content });
+        db.prepare('INSERT INTO docs (id, content) VALUES (1, ?)').run(content);
       }
-
-      return res.status(200).json({ message: 'Document saved successfully' });
+      res.status(200).json({ message: 'Document saved with SQLite!' });
+    } else {
+      res.status(405).json({ error: 'Method Not Allowed' });
     }
-
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-
   } catch (err) {
-    console.error('Error in docs.js:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error(err);
+    res.status(500).json({ error: 'SQLite Error' });
   }
-        }                
+}                          
