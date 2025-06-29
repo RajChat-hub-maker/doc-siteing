@@ -1,17 +1,19 @@
-/* editor.js */
+// main.js
 
 async function saveDoc() {
   const content = document.getElementById('editor').value;
-  const res = await fetch('https://your-backend.onrender.com/save', {
+  const res = await fetch('/api/docs', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content })
   });
-  alert(await res.text());
+
+  const data = await res.json();
+  alert(data.message || 'Saved');
 }
 
 async function loadDoc() {
-  const res = await fetch('https://your-backend.onrender.com/load');
+  const res = await fetch('/api/docs');
   const data = await res.json();
   document.getElementById('editor').value = data.content || '';
 }
@@ -25,5 +27,5 @@ function downloadPDF() {
   a.download = 'document.pdf';
   a.click();
   URL.revokeObjectURL(url);
-}
+}       
 
